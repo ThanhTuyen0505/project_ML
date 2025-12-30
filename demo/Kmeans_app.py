@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 from pathlib import Path
+import numpy as np
 
 # Thư mục hiện tại khi Streamlit chạy app
 BASE_DIR = Path.cwd() / "demo"
@@ -29,22 +30,9 @@ total_spending = st.number_input("Total Spending", min_value=0, max_value=2200, 
 education = st.selectbox("Education", ["Graduate", "Undergraduate", "Postgraduate"])
 
 # ===============================
-# Prepare input dataframe theo thứ tự X
+# Prepare input array
 # ===============================
-X = [
-    'Income',
-    'NumDealsPurchases',
-    'NumWebPurchases',
-    'NumCatalogPurchases',
-    'NumStorePurchases',
-    'NumWebVisitsMonth',
-    'TotalChildren',
-    'TotalSpending',
-    'Education_Postgraduate',
-    'Education_Undergraduate'
-]
-
-input_data = pd.DataFrame([[
+input_array = np.array([[
     income,
     num_deals_purchases,
     num_web_purchases,
@@ -55,12 +43,12 @@ input_data = pd.DataFrame([[
     total_spending,
     1 if education == "Postgraduate" else 0,
     1 if education == "Undergraduate" else 0
-]], columns=X)
+]], dtype=float)
 
 # ===============================
 # Scale input
 # ===============================
-input_scaled = scaler.transform(input_data)
+input_scaled = scaler.transform(input_array)
 
 # ===============================
 # Predict
