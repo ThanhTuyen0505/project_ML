@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import joblib
 
+# BASE_DIR = thư mục nơi file Kmeans_app.py đang nằm
+BASE_DIR = os.path.dirname(__file__)
+
+# Tạo đường dẫn tuyệt đối tới model
+model_path = os.path.join(BASE_DIR, "kmeans_model.pkl")
 # --- Load model, scaler, cluster profile ---
 kmeans = joblib.load("kmeans_model.pkl")
 scaler = joblib.load("scaler.pkl")
