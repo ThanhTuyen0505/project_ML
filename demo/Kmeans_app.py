@@ -2,12 +2,13 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# BASE_DIR = thư mục hiện tại của app
+# Thư mục hiện tại khi Streamlit chạy app
 BASE_DIR = Path.cwd() / "demo"
+
 # --- Load model, scaler, cluster profile ---
-kmeans = joblib.load("BASE_DIR / kmeans_model.pkl")
-scaler = joblib.load("BASE_DIR / scaler.pkl")
-cluster_profile = joblib.load("BASE_DIR / cluster_profile.pkl")  # bảng trung bình các cluster
+kmeans = joblib.load(BASE_DIR / "kmeans_model.pkl")
+scaler = joblib.load(BASE_DIR / "scaler.pkl")
+cluster_profile = joblib.load(BASE_DIR / "cluster_profile.pkl")  
 
 st.title("Customer Segmentation App")
 st.write("Enter full customer details to predict the segment.")
