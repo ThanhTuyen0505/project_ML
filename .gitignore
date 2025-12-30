@@ -1,0 +1,31 @@
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===== Virtual Environment =====
+venv/
+.env/
+
+# ===== Jupyter Notebook =====
+.ipynb_checkpoints/
+
+# ===== Dataset lớn =====
+data/raw/
+data/full_dataset.csv
+*.zip
+*.rar
+
+# ===== Model đã train =====
+*.pkl
+*.joblib
+*.h5
+
+# ===== Log & output =====
+logs/
+*.log
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
