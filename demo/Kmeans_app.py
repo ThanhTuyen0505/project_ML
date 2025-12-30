@@ -1,15 +1,16 @@
+
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 import joblib
-from pathlib import Path
 
+# BASE_DIR = thư mục hiện tại khi chạy Streamlit
 BASE_DIR = Path.cwd() / "demo"
-# ===============================
-# Load model & objects
-# ===============================
-kmeans = load_file(BASE_DIR / "kmeans_model.pkl")
-scaler = load_file(BASE_DIR / "scaler.pkl")
-cluster_profile = load_file(BASE_DIR / "cluster_profile.pkl")
+
+# --- Load model, scaler, cluster profile ---
+kmeans = joblib.load(BASE_DIR / "kmeans_model.pkl")
+scaler = joblib.load(BASE_DIR / "scaler.pkl")
+cluster_profile = joblib.load(BASE_DIR / "cluster_profile.pkl")
 
 st.set_page_config(page_title="Customer Segmentation", layout="centered")
 st.title("Customer Segmentation App")
