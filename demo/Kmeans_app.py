@@ -9,11 +9,20 @@ from pathlib import Path
 BASE_DIR = Path.cwd() / "demo"
 
 # ------------------------------
+# Kiểm tra file model/scaler tồn tại
+# ------------------------------
+def load_file(file_path):
+    if not file_path.exists():
+        st.error(f"File not found: {file_path.name}. Please upload it to the 'demo/' folder.")
+        st.stop()
+    return joblib.load(file_path)
+
+# ------------------------------
 # Load model, scaler, cluster profile
 # ------------------------------
-kmeans = joblib.load(BASE_DIR / "kmeans_model.pkl")
-scaler = joblib.load(BASE_DIR / "scaler.pkl")
-cluster_profile = joblib.load(BASE_DIR / "cluster_profile.pkl")
+kmeans = load_file(BASE_DIR / "kmeans_model.pkl")
+scaler = load_file(BASE_DIR / "scaler.pkl")
+cluster_profile = load_file(BASE_DIR / "cluster_profile.pkl")
 
 # ------------------------------
 # Streamlit UI
@@ -59,5 +68,6 @@ input_scaled = scaler.transform(input_array)
 if st.button("Predict Segment"):
     cluster = kmeans.predict(input_scaled)[0]
     st.success(f"Predicted Segment: Cluster {cluster}")
+    
     st.subheader("Cluster Profile (Average Values)")
     st.dataframe(cluster_profile.loc[[cluster]])
