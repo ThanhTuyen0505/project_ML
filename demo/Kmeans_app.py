@@ -14,63 +14,61 @@ cluster_profile = joblib.load(BASE_DIR / "cluster_profile.pkl")
 st.title("Customer Segmentation App")
 st.write("Enter full customer details to predict the segment.")
 
-# --- Demographic ---
-age = st.number_input("Age", min_value=18, max_value=100, value=35)
-income = st.number_input("Income", min_value=0, max_value=200000, value=50000)
-total_children = st.number_input("Total Children", min_value=0, max_value=10, value=0)
+# ===============================
+# Input fields
+# ===============================
+income = st.number_input("Income", min_value=0, max_value=120000, value=52000, step=1000)
+num_deals_purchases = st.number_input("Number of Deal Purchases", min_value=0, max_value=6, value=2)
+num_web_purchases = st.number_input("Number of Web Purchases", min_value=0, max_value=12, value=4)
+num_catalog_purchases = st.number_input("Number of Catalog Purchases", min_value=0, max_value=10, value=2)
+num_store_purchases = st.number_input("Number of Store Purchases", min_value=0, max_value=13, value=5)
+num_web_visits_month = st.number_input("Number of Web Visits per Month", min_value=0, max_value=13, value=6)
+total_children = st.number_input("Total Children", min_value=0, max_value=3, value=1)
+total_spending = st.number_input("Total Spending", min_value=0, max_value=2200, value=400, step=50)
 
-# --- Purchase Behavior ---
-mnt_wines = st.number_input("Amount spent on Wines", min_value=0, max_value=5000, value=0)
-mnt_fruits = st.number_input("Amount spent on Fruits", min_value=0, max_value=5000, value=0)
-mnt_meat = st.number_input("Amount spent on Meat Products", min_value=0, max_value=5000, value=0)
-mnt_fish = st.number_input("Amount spent on Fish Products", min_value=0, max_value=5000, value=0)
-mnt_sweet = st.number_input("Amount spent on Sweet Products", min_value=0, max_value=5000, value=0)
-mnt_gold = st.number_input("Amount spent on Gold Products", min_value=0, max_value=5000, value=0)
+education = st.selectbox("Education", ["Graduate", "Undergraduate", "Postgraduate"])
 
-num_deals_purchases = st.number_input("Number of Deal Purchases", min_value=0, max_value=100, value=0)
-num_web_purchases = st.number_input("Number of Web Purchases", min_value=0, max_value=100, value=0)
-num_store_purchases = st.number_input("Number of Store Purchases", min_value=0, max_value=100, value=0)
-
-recency = st.number_input("Recency (days since last purchase)", min_value=0, max_value=365, value=30)
-marital_status = st.selectbox("Marital Status", options=["Single", "Married"])
-education = st.selectbox("Education", options=["Undergraduate", "Postgraduate", "Graduate"])
-
-
-# --- Prepare input dataframe ---
-feature_cols = [
-    "Age","Income","TotalChildren",
-    "MntWines","MntFruits","MntMeatProducts","MntFishProducts","MntSweetProducts","MntGoldProds",
-    "NumDealsPurchases","NumWebPurchases","NumStorePurchases",
-    "Recency","Marital_Status_Single","Education_Postgraduate","Education_Undergraduate"    
+# ===============================
+# Prepare input dataframe theo thứ tự X
+# ===============================
+X = [
+    'Income',
+    'NumDealsPurchases',
+    'NumWebPurchases',
+    'NumCatalogPurchases',
+    'NumStorePurchases',
+    'NumWebVisitsMonth',
+    'TotalChildren',
+    'TotalSpending',
+    'Education_Postgraduate',
+    'Education_Undergraduate'
 ]
 
-input_data = pd.DataFrame(columns=feature_cols)
-input_data.loc[0] = [
-    age,
+input_data = pd.DataFrame([[
     income,
-    total_children,
-    mnt_wines,
-    mnt_fruits,
-    mnt_meat,
-    mnt_fish,
-    mnt_sweet,
-    mnt_gold,
     num_deals_purchases,
     num_web_purchases,
+    num_catalog_purchases,
     num_store_purchases,
-    recency,
-    1 if marital_status == "Single" else 0,   # Marital_Status_Single
-    1 if education == "Postgraduate" else 0,  # Education_Postgraduate
-    1 if education == "Undergraduate" else 0, # Education_Undergraduate
+    num_web_visits_month,
+    total_children,
+    total_spending,
+    1 if education == "Postgraduate" else 0,
+    1 if education == "Undergraduate" else 0
+]], columns=X)
 
-]
-
-
-# --- Scale input ---
+# ===============================
+# Scale input
+# ===============================
 input_scaled = scaler.transform(input_data)
 
-# --- Predict ---
-input_scaled=scaler.transform(input_data)
+# ===============================
+# Predict
+# ===============================
 if st.button("Predict Segment"):
-    cluster=kmeans.predict(input_scaled)[0]
-    st.success(f"Predict Segment: Cluster {cluster}")
+    cluster = kmeans.predict(input_scaled)[0]
+
+    st.success(f"Predicted Segment: Cluster {cluster}")
+
+    st.subheader("Cluster Profile (Average Values)")
+    st.dataframe(cluster_profile.loc[[cluster]])
