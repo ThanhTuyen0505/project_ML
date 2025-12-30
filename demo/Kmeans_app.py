@@ -1,27 +1,15 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import os
+from pathlib import Path
 
-# --- Thiết lập BASE_DIR ---
-try:
-    # Cách hiện đại nếu pathlib có sẵn
-    from pathlib import Path
-    BASE_DIR = Path.cwd() / "demo"
-except ImportError:
-    # Nếu Python cũ, fallback sang os.path
-    BASE_DIR = os.path.join(os.getcwd(), "demo")
-
-# --- Load model, scaler, cluster profile ---
-try:
-    kmeans = joblib.load(BASE_DIR / "kmeans_model.pkl")
-    scaler = joblib.load(BASE_DIR / "scaler.pkl")
-    cluster_profile = joblib.load(BASE_DIR / "cluster_profile.pkl")
-except Exception as e:
-    st.error(f"Lỗi khi load file: {e}")
-    st.stop()  # Dừng app nếu load thất bại
-
-
+BASE_DIR = Path.cwd() / "demo"
+# ===============================
+# Load model & objects
+# ===============================
+kmeans = load_file(BASE_DIR / "kmeans_model.pkl")
+scaler = load_file(BASE_DIR / "scaler.pkl")
+cluster_profile = load_file(BASE_DIR / "cluster_profile.pkl")
 
 st.set_page_config(page_title="Customer Segmentation", layout="centered")
 st.title("Customer Segmentation App")
